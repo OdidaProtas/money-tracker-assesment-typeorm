@@ -8,7 +8,7 @@ export class CreateWalletDto {
   userId: string;
 
   @ApiProperty({
-    example: 'wallet_1',
+example: 'wallet_1',
   })
   name: string;
 }
