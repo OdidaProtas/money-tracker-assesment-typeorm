@@ -28,7 +28,6 @@ export class WalletsService {
   }
 
   async findOne(id: string) {
-    console.log(id);
     const wallet = await this.walletRepository.findOne({
       where: { id },
       relations: ['transactions'],

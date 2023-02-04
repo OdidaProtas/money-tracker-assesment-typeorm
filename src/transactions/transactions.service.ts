@@ -3,7 +3,7 @@ import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Transaction } from './entities/transaction.entity';
-import { Repository, UpdateResult, DeleteResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { WalletsService } from 'src/wallets/wallets.service';
 
 @Injectable()
@@ -11,9 +11,19 @@ export class TransactionsService {
   constructor(
     @InjectRepository(Transaction)
     private transactionsRepository: Repository<Transaction>,
+    private walletService: WalletsService,
   ) {}
-  create(createTransactionDto: CreateTransactionDto) {
-    return 'This action adds a new transaction';
+  async create(createTransactionDto: CreateTransactionDto) {
+    const wallet = await this.walletService.findOne(
+      createTransactionDto.walletId,
+    );
+    const transaction =
+      this.transactionsRepository.create(createTransactionDto);
+    transaction.wallet = wallet;
+    const withTransaction = await this.transactionsRepository.save(transaction);
+    const transactionCopy = { ...withTransaction };
+    delete transactionCopy['wallet'];
+    return { ...transactionCopy, walletId: wallet.id };
   }
 
   findAll() {
