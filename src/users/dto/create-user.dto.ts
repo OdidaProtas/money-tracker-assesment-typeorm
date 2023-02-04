@@ -16,4 +16,10 @@ export class CreateUserDto {
     example: 'Doe',
   })
   lastName: string;
+
+  @ApiProperty({
+    required: false,
+    default: 0.0,
+  })
+  balance: number;
 }

@@ -16,6 +16,9 @@ export class User {
   @Column({ nullable: true })
   lastName: string;
 
+  @Column({ nullable: true, default: 0.0, type: 'float' })
+  balance: number;
+
   @CreateDateColumn()
   createdAt: Date;
 

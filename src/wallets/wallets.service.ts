@@ -36,7 +36,7 @@ export class WalletsService {
     return wallet;
   }
 
-  update(id: number, updateWalletDto: UpdateWalletDto) {
-    return `This action updates a #${id} wallet`;
+  update(id: string, updateWalletDto: UpdateWalletDto) {
+    return this.walletRepository.update(id, updateWalletDto);
   }
 }
