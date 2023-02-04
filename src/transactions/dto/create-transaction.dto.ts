@@ -6,6 +6,7 @@ export class CreateTransactionDto {
 
   @ApiProperty({
     default: 'credit',
+    enum: ['credit', 'debit'],
     description: "Can be of type 'debit' or 'credit'",
   })
   type: string;

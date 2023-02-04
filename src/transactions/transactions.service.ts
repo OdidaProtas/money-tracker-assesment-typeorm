@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,6 +23,12 @@ export class TransactionsService {
     );
     if (!wallet) {
       throw new BadRequestException('Invalid wallet');
+    }
+    if (
+      createTransactionDto.type === 'debit' &&
+      wallet.balance < createTransactionDto.amount
+    ) {
+      throw new ForbiddenException('Insufficient balance');
     }
     const transaction =
       this.transactionsRepository.create(createTransactionDto);
