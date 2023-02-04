@@ -20,11 +20,13 @@ export class UsersService {
     return this.userRepository.find({ relations: ['wallets'] });
   }
 
-  findOne(id: string) {
-    return this.userRepository.findOne({
+  async findOne(id: string) {
+    let user = await this.userRepository.findOne({
       where: { id },
       relations: ['wallets'],
     });
+
+    return user;
   }
 
   async findOneByWallet(id: string) {
@@ -33,9 +35,5 @@ export class UsersService {
 
   update(id: string, updateUserDto: UpdateUserDto) {
     return this.userRepository.update(id, updateUserDto);
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }

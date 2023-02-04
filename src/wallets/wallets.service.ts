@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,6 +15,11 @@ export class WalletsService {
 
   async create(createWalletDto: CreateWalletDto) {
     const user = await this.userService.findOne(createWalletDto.userId);
+
+    if (!user) {
+      throw new BadRequestException('Invalid user');
+    }
+
     const wallet = this.walletRepository.create({ ...createWalletDto });
     wallet.user = user;
     const withUserSaved = await this.walletRepository.save(wallet);

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,6 +17,9 @@ export class TransactionsService {
     const wallet = await this.walletService.findOne(
       createTransactionDto.walletId,
     );
+    if (!wallet) {
+      throw new BadRequestException('Invalid wallet');
+    }
     const transaction =
       this.transactionsRepository.create(createTransactionDto);
     transaction.wallet = wallet;

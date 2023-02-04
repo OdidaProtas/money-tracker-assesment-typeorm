@@ -1,5 +1,4 @@
 import { UsersService } from 'src/users/users.service';
-import { WalletsService } from 'src/wallets/wallets.service';
 import {
   DataSource,
   EntitySubscriberInterface,
@@ -10,11 +9,7 @@ import { Wallet } from './entities/wallet.entity';
 
 @EventSubscriber()
 export class WalletSubscriber implements EntitySubscriberInterface<Wallet> {
-  constructor(
-    dataSource: DataSource,
-    private walletService: WalletsService,
-    private userService: UsersService,
-  ) {
+  constructor(dataSource: DataSource, private userService: UsersService) {
     dataSource.subscribers.push(this);
   }
 
@@ -25,6 +20,7 @@ export class WalletSubscriber implements EntitySubscriberInterface<Wallet> {
   async afterInsert(event: InsertEvent<Wallet>) {
     let { user, balance } = event.entity;
     let userBalance = user.balance + balance;
-    this.userService.update(user.id, { balance: userBalance });
+    if (userBalance > user.balance)
+      this.userService.update(user.id, { balance: userBalance });
   }
 }
