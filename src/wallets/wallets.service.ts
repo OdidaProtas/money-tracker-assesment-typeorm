@@ -1,8 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult, DeleteResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Wallet } from './entities/wallet.entity';
 import { UsersService } from 'src/users/users.service';
 
@@ -24,18 +24,20 @@ export class WalletsService {
   }
 
   findAll() {
-    return `This action returns all wallets`;
+    return this.walletRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} wallet`;
+  async findOne(id: string) {
+    console.log(id);
+    const wallet = await this.walletRepository.findOne({
+      where: { id },
+      relations: ['transactions'],
+    });
+
+    return wallet;
   }
 
   update(id: number, updateWalletDto: UpdateWalletDto) {
     return `This action updates a #${id} wallet`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} wallet`;
   }
 }

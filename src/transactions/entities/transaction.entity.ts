@@ -33,6 +33,6 @@ export class Transaction {
   @JoinColumn()
   user: User;
 
-  @OneToMany(() => Wallet, (wallet) => wallet.transactions)
+  @ManyToOne(() => Wallet, (wallet) => wallet.transactions)
   wallet: Wallet;
 }

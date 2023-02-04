@@ -13,6 +13,7 @@ import { TransactionsModule } from './transactions/transactions.module';
       database: 'trackerstore.db',
       synchronize: true,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      // logging: true,
     }),
     UsersModule,
     WalletsModule,

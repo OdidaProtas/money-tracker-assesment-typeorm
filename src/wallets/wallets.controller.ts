@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -12,7 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('wallets')
 @ApiTags('Wallets')
 export class WalletsController {
-  constructor(private readonly walletsService: WalletsService) {}
+  constructor(private readonly walletsService: WalletsService,) {}
 
   @Post()
   create(@Body() createWalletDto: CreateWalletDto) {
@@ -26,8 +20,6 @@ export class WalletsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.walletsService.findOne(+id);
+    return this.walletsService.findOne(id);
   }
-
- 
 }
