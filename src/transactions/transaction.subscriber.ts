@@ -7,13 +7,16 @@ import {
   InsertEvent,
 } from 'typeorm';
 import { Transaction } from './entities/transaction.entity';
-import { TransactionsService } from './transactions.service';
 
 @EventSubscriber()
 export class TransactionSubscriber
   implements EntitySubscriberInterface<Transaction>
 {
-  constructor(dataSource: DataSource, private walletService: WalletsService) {
+  constructor(
+    dataSource: DataSource,
+    private walletService: WalletsService,
+    private userService: UsersService,
+  ) {
     dataSource.subscribers.push(this);
   }
 
@@ -23,9 +26,16 @@ export class TransactionSubscriber
 
   async afterInsert(event: InsertEvent<Transaction>) {
     let { wallet, type, amount } = event.entity;
-    let balance = wallet.balance;
-    if (type === 'credit') balance = balance + amount;
-    else balance = balance - amount;
-    this.walletService.update(wallet.id, { balance });
+    // Update wallet balance
+    let wallerBalance = wallet.balance;
+    if (type === 'credit') wallerBalance = wallerBalance + amount;
+    else wallerBalance = wallerBalance - amount;
+    this.walletService.update(wallet.id, { balance: wallerBalance });
+    // update user balance
+    let user = await this.userService.findOneByWallet(wallet.id);
+    let userBalance = user.balance;
+    if (type === 'credit') userBalance = userBalance + amount;
+    else userBalance = userBalance - amount;
+    this.userService.update(user.id, { balance: userBalance });
   }
 }

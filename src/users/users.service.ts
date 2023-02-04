@@ -27,6 +27,10 @@ export class UsersService {
     });
   }
 
+  async findOneByWallet(id: string) {
+    return this.userRepository.findOneBy({ wallets: { id } });
+  }
+
   update(id: string, updateUserDto: UpdateUserDto) {
     return this.userRepository.update(id, updateUserDto);
   }
